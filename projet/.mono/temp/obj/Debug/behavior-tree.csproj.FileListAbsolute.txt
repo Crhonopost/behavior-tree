@@ -1,0 +1,9 @@
+C:\Users\crhon\Desktop\godot\creations\git\behavior-tree\projet\.mono\temp\bin\Debug\behavior-tree.dll
+C:\Users\crhon\Desktop\godot\creations\git\behavior-tree\projet\.mono\temp\bin\Debug\behavior-tree.pdb
+C:\Users\crhon\Desktop\godot\creations\git\behavior-tree\projet\.mono\temp\obj\Debug\behavior-tree.csproj.AssemblyReference.cache
+C:\Users\crhon\Desktop\godot\creations\git\behavior-tree\projet\.mono\temp\obj\Debug\behavior-tree.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\crhon\Desktop\godot\creations\git\behavior-tree\projet\.mono\temp\obj\Debug\behavior-tree.AssemblyInfoInputs.cache
+C:\Users\crhon\Desktop\godot\creations\git\behavior-tree\projet\.mono\temp\obj\Debug\behavior-tree.AssemblyInfo.cs
+C:\Users\crhon\Desktop\godot\creations\git\behavior-tree\projet\.mono\temp\obj\Debug\behavior-tree.csproj.CoreCompileInputs.cache
+C:\Users\crhon\Desktop\godot\creations\git\behavior-tree\projet\.mono\temp\obj\Debug\behavior-tree.dll
+C:\Users\crhon\Desktop\godot\creations\git\behavior-tree\projet\.mono\temp\obj\Debug\behavior-tree.pdb

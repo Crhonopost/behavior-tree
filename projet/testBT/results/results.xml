@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<testsuites failures="1" name="TestXML" tests="1" time="0.015">
+	<testsuite name="S" failures="0"  tests="-1" time="0">
+		<testcase name="Not Found" time="0"><failure message="No Tests Found On Suite res://testBT/tests/tests.cs"></failure></testcase>
+	</testsuite>
+
+</testsuites>
