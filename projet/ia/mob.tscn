@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://ia/mob.cs" type="Script" id=1]
 [ext_resource path="res://addons/BehaviorTree/BasicNode/BT.cs" type="Script" id=2]
 [ext_resource path="res://ia/behavior/setRandomLocation.cs" type="Script" id=3]
 [ext_resource path="res://addons/BehaviorTree/composites/BTSequence.cs" type="Script" id=4]
 [ext_resource path="res://ia/behavior/locationReached.cs" type="Script" id=5]
+[ext_resource path="res://addons/BehaviorTree/Decorators/BTRepeater.cs" type="Script" id=6]
 
 [sub_resource type="CapsuleShape" id=1]
 
@@ -26,14 +27,17 @@ enabled = true
 
 [node name="BehaviorTree" type="Node" parent="."]
 script = ExtResource( 2 )
-rootPath = NodePath("BTSequence")
+rootPath = NodePath("BTRepeater")
 agentPath = NodePath("..")
 
-[node name="BTSequence" type="Node" parent="BehaviorTree"]
+[node name="BTRepeater" type="Node" parent="BehaviorTree"]
+script = ExtResource( 6 )
+
+[node name="BTSequence" type="Node" parent="BehaviorTree/BTRepeater"]
 script = ExtResource( 4 )
 
-[node name="newRandomLocation" type="Node" parent="BehaviorTree/BTSequence"]
-script = ExtResource( 3 )
-
-[node name="destinationReached" type="Node" parent="BehaviorTree/BTSequence"]
+[node name="LocationReached" type="Node" parent="BehaviorTree/BTRepeater/BTSequence"]
 script = ExtResource( 5 )
+
+[node name="newRandomLocation" type="Node" parent="BehaviorTree/BTRepeater/BTSequence"]
+script = ExtResource( 3 )

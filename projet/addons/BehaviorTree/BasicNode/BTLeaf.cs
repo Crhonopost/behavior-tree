@@ -1,13 +1,15 @@
 using Godot;
 using System;
+//using MonoCustomResourceRegistry;
 
 namespace BehaviorTree{
+    //[RegisteredType("BTLeaf2", "addons/BehaviorTree/icons/BTLeaf.png", "Node")]
     public class BTLeaf : BTNode
     {
+
         public override BTState Tick(Node agent)
         {
-            GD.Print("une node ne fait rien");
-            return BTState.RUNNING;
+            return BTState.FAILURE;
         }
     }
 }

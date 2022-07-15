@@ -22,6 +22,8 @@ namespace BehaviorTree{
         [Export]
         private NodePath agentPath;
 
+        private bool isActive;
+
         public BT(BTNode root, Node agent){
             this.root = root;
             this.agent = agent;
@@ -40,6 +42,7 @@ namespace BehaviorTree{
 
         public override void _Ready()
         {
+            isActive = true;
             if(GetNode(rootPath).GetType().IsAssignableFrom(typeof(BTNode))){
                 root = GetNode<BTNode>(rootPath);
             }
@@ -52,7 +55,13 @@ namespace BehaviorTree{
 
         public override void _Process(float delta)
         {
-            root.Tick(agent);
+            if(isActive){
+                root.PreTick(agent);
+                if(root.Tick(agent) != BTState.RUNNING){
+                    isActive = false;
+                };
+                root.PostTick(agent);
+            }
         }
     }
 }

@@ -30,7 +30,7 @@ public class mob : KinematicBody
             
             movement = movement.Normalized() * speed;
             
-            GD.Print(MoveAndSlide(movement));
+            MoveAndSlide(movement);
 
             if((path.Peek() - Translation).Length() < 1.2){
                 path.Dequeue();
@@ -41,7 +41,7 @@ public class mob : KinematicBody
     public override void _UnhandledKeyInput(InputEventKey @event)
     {
         if(@event.IsActionPressed("ui_accept")){
-            settargetLocation(DefineRandomLocation(50));
+            settargetLocation(DefineRandomLocation(25));
         }
     }
 
@@ -51,7 +51,6 @@ public class mob : KinematicBody
         path.Clear();
         foreach(Vector3 vec in nav.GetSimplePath(Translation, targetLocation)){
             path.Enqueue(vec);
-            GD.Print(vec);
         }
         return true;
     }

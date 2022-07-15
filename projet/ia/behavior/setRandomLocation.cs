@@ -6,7 +6,8 @@ namespace BehaviorTree.mobTest{
     {
         public override BTState Tick(Node agent)
         {
-            if(((mob)agent).settargetLocation(((mob)agent).DefineRandomLocation(5f))){
+            GD.Print("new random location");
+            if(((mob)agent).settargetLocation(((mob)agent).DefineRandomLocation(25))){
                 setState(BTState.SUCCESS);
                 return BTState.SUCCESS;
             }

@@ -132,6 +132,12 @@ _global_script_class_icons={
 "WATTest": ""
 }
 
+[MonoCustomResourceRegistry]
+
+ClassPrefix=""
+SearchType=0
+ResourceScriptDirectories=[ "res://addons/BehaviorTree" ]
+
 [WAT]
 
 Test_Directory="res://testBT/tests"
@@ -151,7 +157,7 @@ config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/BehaviorTree/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/BehaviorTree/plugin.cfg", "res://addons/MonoCustomResourceRegistry/plugin.cfg" )
 
 [physics]
 
