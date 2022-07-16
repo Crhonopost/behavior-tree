@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace BehaviorTree{
+namespace BehaviorTree.Decorator{
     public class BTDecorator : BTNode
     {
         protected BTNode child;

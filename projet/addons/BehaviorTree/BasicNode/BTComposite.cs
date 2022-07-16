@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace BehaviorTree{
+namespace BehaviorTree.Composite{
     public class BTComposite : BTNode
     {
         private Godot.Collections.Array<BTNode> childs;

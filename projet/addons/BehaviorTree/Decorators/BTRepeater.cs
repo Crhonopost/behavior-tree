@@ -1,7 +1,7 @@
 
 using Godot;
 
-namespace BehaviorTree{
+namespace BehaviorTree.Decorator{
     public class BTRepeater:BTDecorator
     {
         public override void PreTick(Node agent)

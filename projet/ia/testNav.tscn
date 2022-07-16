@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://ia/mob.tscn" type="PackedScene" id=1]
 [ext_resource path="res://ia/testNav.cs" type="Script" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://addons/BehaviorTree/composites/BTSelector.cs" type="Script" id=10]
 [ext_resource path="res://ia/behavior/enemyNearBy.cs" type="Script" id=11]
 [ext_resource path="res://ia/behavior/setTargetLocation.cs" type="Script" id=12]
+[ext_resource path="res://ia/behavior/fleeStraight.cs" type="Script" id=14]
 
 [sub_resource type="NavigationMesh" id=1]
 vertices = PoolVector3Array( -7.8, 0.9, -13.8, -13.8, 0.9, -13.8, -13.8, 0.9, -7.8, 13.8, 0.9, -7.8, 13.8, 0.9, -13.8, 6.6, 0.9, -13.8, 6.6, 0.9, 13.8, 13.8, 0.9, 13.8, 13.8, 0.9, 6.6, 4.2, 0.9, 3, 0.6, 0.9, 4.2, 0.6, 0.9, 13.8, 6.6, 0.9, 13.8, 13.8, 0.9, 6.6, 3, 0.9, -4.2, 6.6, 0.9, -13.8, -0.599999, 0.9, -13.8, -3, 0.9, -4.2, 3, 0.9, -4.2, 4.2, 0.9, 3, 13.8, 0.9, -0.599999, 13.8, 0.9, -7.8, 6.6, 0.9, -13.8, 4.2, 0.9, 3, 13.8, 0.9, 6.6, 13.8, 0.9, -0.599999, -7.8, 0.9, -13.8, -13.8, 0.9, -7.8, -13.8, 0.9, -0.599999, -4.2, 0.9, -0.599999, -3, 0.9, -4.2, -0.599999, 0.9, -13.8, -13.8, 0.9, 6.6, -13.8, 0.9, 13.8, -6.6, 0.9, 13.8, -4.2, 0.9, 3, -4.2, 0.9, -0.599999, -13.8, 0.9, -0.599999, -13.8, 0.9, 6.6, -4.2, 0.9, 3, -13.8, 0.9, 6.6, -6.6, 0.9, 13.8, 0.6, 0.9, 13.8, 0.6, 0.9, 4.2 )
@@ -85,13 +86,24 @@ script = ExtResource( 5 )
 [node name="BTSelector" type="Node" parent="BehaviorTree/BTRepeater"]
 script = ExtResource( 10 )
 
-[node name="StopIfEnneyNear" type="Node" parent="BehaviorTree/BTRepeater/BTSelector"]
+[node name="EnnemyNearest" type="Node" parent="BehaviorTree/BTRepeater/BTSelector"]
 script = ExtResource( 9 )
 
-[node name="EnemyNearBy" type="Node" parent="BehaviorTree/BTRepeater/BTSelector/StopIfEnneyNear"]
+[node name="Near" type="Node" parent="BehaviorTree/BTRepeater/BTSelector/EnnemyNearest"]
 script = ExtResource( 11 )
+radius = 6.0
 
-[node name="resetTargetLocation" type="Node" parent="BehaviorTree/BTRepeater/BTSelector/StopIfEnneyNear"]
+[node name="fleeStraight" type="Node" parent="BehaviorTree/BTRepeater/BTSelector/EnnemyNearest"]
+script = ExtResource( 14 )
+
+[node name="EnnemyNear" type="Node" parent="BehaviorTree/BTRepeater/BTSelector"]
+script = ExtResource( 9 )
+
+[node name="EnemyNearBy" type="Node" parent="BehaviorTree/BTRepeater/BTSelector/EnnemyNear"]
+script = ExtResource( 11 )
+radius = 10.0
+
+[node name="resetTargetLocation" type="Node" parent="BehaviorTree/BTRepeater/BTSelector/EnnemyNear"]
 script = ExtResource( 12 )
 
 [node name="AlwaysMoving" type="Node" parent="BehaviorTree/BTRepeater/BTSelector"]

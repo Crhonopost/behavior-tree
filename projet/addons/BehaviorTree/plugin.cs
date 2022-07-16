@@ -13,10 +13,14 @@ public class plugin : EditorPlugin
         AddCustomType("BTRepeater", "Node", GD.Load<Script>("addons/BehaviorTree/Decorators/BTRepeater.cs"), GD.Load<Texture>("addons/BehaviorTree/icons/BTRepeater.png"));
         AddCustomType("BTBlackboard", "Node", GD.Load<Script>("addons/BehaviorTree/BTBlackboard.cs"), GD.Load<Texture>("addons/BehaviorTree/icons/BTBlackBoard.png"));
         AddCustomType("BTSelector", "Node", GD.Load<Script>("addons/BehaviorTree/composites/BTSelector.cs"), GD.Load<Texture>("addons/BehaviorTree/icons/BTSelector.png"));
+        AddCustomType("BTRepeatUntil", "Node", GD.Load<Script>("addons/BehaviorTree/Decorators/BTRepeatUntil.cs"), GD.Load<Texture>("addons/BehaviorTree/icons/BTNode.png"));
+        AddCustomType("BTInverter", "Node", GD.Load<Script>("addons/BehaviorTree/Decorators/BTInverter.cs"), GD.Load<Texture>("addons/BehaviorTree/icons/BTNode.png"));
     }
 
     public override void _ExitTree()
     {
+        RemoveCustomType("BTInverter");
+        RemoveCustomType("BTRepeatUntil");
         RemoveCustomType("BTSelector");
         RemoveCustomType("BTRepeater");
         RemoveCustomType("BTSequence");
