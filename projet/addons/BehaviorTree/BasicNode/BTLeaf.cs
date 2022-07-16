@@ -7,7 +7,7 @@ namespace BehaviorTree{
     public class BTLeaf : BTNode
     {
 
-        public override BTState Tick(Node agent)
+        public override BTState Tick(Node agent, BTBlackboard blackboard)
         {
             return BTState.FAILURE;
         }

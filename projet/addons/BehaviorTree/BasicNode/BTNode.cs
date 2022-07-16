@@ -42,7 +42,7 @@ namespace BehaviorTree{
             EmitSignal("changingState", newState);
         }
 
-        public virtual BTState Tick(Node agent){ // manque le blackboard
+        public virtual BTState Tick(Node agent, BTBlackboard blackboard){ // manque le blackboard
             GD.Print("une node ne fait rien");
             return BTState.FAILURE;
         }

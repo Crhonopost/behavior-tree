@@ -1,8 +1,17 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://ia/mob.tscn" type="PackedScene" id=1]
 [ext_resource path="res://ia/testNav.cs" type="Script" id=2]
 [ext_resource path="res://Joueur.tscn" type="PackedScene" id=3]
+[ext_resource path="res://ia/behavior/setRandomLocation.cs" type="Script" id=4]
+[ext_resource path="res://addons/BehaviorTree/Decorators/BTRepeater.cs" type="Script" id=5]
+[ext_resource path="res://ia/behavior/locationReached.cs" type="Script" id=6]
+[ext_resource path="res://addons/BehaviorTree/BTBlackboard.cs" type="Script" id=7]
+[ext_resource path="res://addons/BehaviorTree/BasicNode/BT.cs" type="Script" id=8]
+[ext_resource path="res://addons/BehaviorTree/composites/BTSequence.cs" type="Script" id=9]
+[ext_resource path="res://addons/BehaviorTree/composites/BTSelector.cs" type="Script" id=10]
+[ext_resource path="res://ia/behavior/enemyNearBy.cs" type="Script" id=11]
+[ext_resource path="res://ia/behavior/setTargetLocation.cs" type="Script" id=12]
 
 [sub_resource type="NavigationMesh" id=1]
 vertices = PoolVector3Array( -7.8, 0.9, -13.8, -13.8, 0.9, -13.8, -13.8, 0.9, -7.8, 13.8, 0.9, -7.8, 13.8, 0.9, -13.8, 6.6, 0.9, -13.8, 6.6, 0.9, 13.8, 13.8, 0.9, 13.8, 13.8, 0.9, 6.6, 4.2, 0.9, 3, 0.6, 0.9, 4.2, 0.6, 0.9, 13.8, 6.6, 0.9, 13.8, 13.8, 0.9, 6.6, 3, 0.9, -4.2, 6.6, 0.9, -13.8, -0.599999, 0.9, -13.8, -3, 0.9, -4.2, 3, 0.9, -4.2, 4.2, 0.9, 3, 13.8, 0.9, -0.599999, 13.8, 0.9, -7.8, 6.6, 0.9, -13.8, 4.2, 0.9, 3, 13.8, 0.9, 6.6, 13.8, 0.9, -0.599999, -7.8, 0.9, -13.8, -13.8, 0.9, -7.8, -13.8, 0.9, -0.599999, -4.2, 0.9, -0.599999, -3, 0.9, -4.2, -0.599999, 0.9, -13.8, -13.8, 0.9, 6.6, -13.8, 0.9, 13.8, -6.6, 0.9, 13.8, -4.2, 0.9, 3, -4.2, 0.9, -0.599999, -13.8, 0.9, -0.599999, -13.8, 0.9, 6.6, -4.2, 0.9, 3, -13.8, 0.9, 6.6, -6.6, 0.9, 13.8, 0.6, 0.9, 13.8, 0.6, 0.9, 4.2 )
@@ -62,3 +71,40 @@ material/0 = null
 
 [node name="Joueur" parent="." instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6.57665, 4.46822, 0 )
+blackboardPath = NodePath("../BehaviorTree/BTBlackboard")
+
+[node name="BehaviorTree" type="Node" parent="."]
+script = ExtResource( 8 )
+rootPath = NodePath("BTRepeater")
+agentPath = NodePath("../mob")
+blackboardPath = NodePath("BTBlackboard")
+
+[node name="BTRepeater" type="Node" parent="BehaviorTree"]
+script = ExtResource( 5 )
+
+[node name="BTSelector" type="Node" parent="BehaviorTree/BTRepeater"]
+script = ExtResource( 10 )
+
+[node name="StopIfEnneyNear" type="Node" parent="BehaviorTree/BTRepeater/BTSelector"]
+script = ExtResource( 9 )
+
+[node name="EnemyNearBy" type="Node" parent="BehaviorTree/BTRepeater/BTSelector/StopIfEnneyNear"]
+script = ExtResource( 11 )
+
+[node name="resetTargetLocation" type="Node" parent="BehaviorTree/BTRepeater/BTSelector/StopIfEnneyNear"]
+script = ExtResource( 12 )
+
+[node name="AlwaysMoving" type="Node" parent="BehaviorTree/BTRepeater/BTSelector"]
+script = ExtResource( 9 )
+
+[node name="LocationReached" type="Node" parent="BehaviorTree/BTRepeater/BTSelector/AlwaysMoving"]
+script = ExtResource( 6 )
+
+[node name="newRandomLocation" type="Node" parent="BehaviorTree/BTRepeater/BTSelector/AlwaysMoving"]
+script = ExtResource( 4 )
+
+[node name="BTBlackboard" type="Node" parent="BehaviorTree"]
+script = ExtResource( 7 )
+data = {
+"posJoueur": Vector3( 0, 0, 0 )
+}

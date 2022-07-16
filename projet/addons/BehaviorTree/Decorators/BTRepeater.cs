@@ -8,9 +8,9 @@ namespace BehaviorTree{
         {
             child.PreTick(agent);
         }
-        public override BTState Tick(Node agent)
+        public override BTState Tick(Node agent, BTBlackboard blackboard)
         {
-            child.Tick(agent);
+            child.Tick(agent, blackboard);
             return BTState.RUNNING;
         }
         public override void PostTick(Node agent)

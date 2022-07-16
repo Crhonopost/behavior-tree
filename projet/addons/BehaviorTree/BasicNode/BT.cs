@@ -22,11 +22,16 @@ namespace BehaviorTree{
         [Export]
         private NodePath agentPath;
 
+        private BTBlackboard blackboard;
+        [Export]
+        private NodePath blackboardPath;
+
         private bool isActive;
 
-        public BT(BTNode root, Node agent){
+        public BT(BTNode root, Node agent, BTBlackboard blackboard){
             this.root = root;
             this.agent = agent;
+            this.blackboard = blackboard;
         }
 
         public BT(){
@@ -47,17 +52,21 @@ namespace BehaviorTree{
                 root = GetNode<BTNode>(rootPath);
             }
             if(GetNode(agentPath).GetType().IsAssignableFrom(typeof(Node))){
-                agent = (Node) GetNode<Node>(agentPath);
+                agent = GetNode<Node>(agentPath);
+            }
+            if(GetNode(blackboardPath).GetType() == typeof(BTBlackboard)){
+                blackboard = GetNode<BTBlackboard>(blackboardPath);
             }
             agent = GetNode(agentPath);
             root = GetNode<BTNode>(rootPath);
+            blackboard = GetNode<BTBlackboard>(blackboardPath);
         }
 
         public override void _Process(float delta)
         {
             if(isActive){
                 root.PreTick(agent);
-                if(root.Tick(agent) != BTState.RUNNING){
+                if(root.Tick(agent, blackboard) != BTState.RUNNING){
                     isActive = false;
                 };
                 root.PostTick(agent);

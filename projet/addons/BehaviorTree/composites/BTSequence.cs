@@ -1,16 +1,10 @@
 using Godot;
 
-namespace BehaviorTree{
+namespace BehaviorTree.Composite{
     public class BTSequence : BTComposite{
 
-        public BTNode Next(){ // sort le prochain enfant ou null s'il n'y en a pas
-            int currentI = getChilds().IndexOf(getCurrentChild());
-            if(!HasNext()){
-                return null;
-            }
-            else{
-                return getChilds()[currentI + 1];
-            }
+        public BTNode Next(){ // part du principe que l'on a vérifié qu'il y avait un autre child
+            return getChilds()[getChilds().IndexOf(getCurrentChild()) + 1];
         }
 
         public bool HasNext(){
@@ -32,9 +26,9 @@ namespace BehaviorTree{
             getCurrentChild().PostTick(agent);
         }
 
-        public override BTState Tick(Node agent)
+        public override BTState Tick(Node agent, BTBlackboard blackboard)
         {
-            BTState etat = getCurrentChild().Tick(agent);
+            BTState etat = getCurrentChild().Tick(agent, blackboard);
             BTState result;
             setState(etat);
             if(etat == BTState.FAILURE || etat == BTState.RUNNING){
@@ -44,14 +38,13 @@ namespace BehaviorTree{
                 }
             }
             else{
-                BTNode next = Next();
-                if(next == null){
+                if(HasNext()){
+                    setCurrentChild(Next());
+                    result = BTState.RUNNING;
+                } else
+                {
                     setCurrentChild(getChilds()[0]);
                     result = BTState.SUCCESS;
-                }
-                else{
-                    setCurrentChild(next);
-                    result = BTState.RUNNING;
                 }
             }
             return result;

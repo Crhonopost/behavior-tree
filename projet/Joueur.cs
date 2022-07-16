@@ -1,12 +1,23 @@
 using Godot;
 using System;
+using BehaviorTree;
 
 public class Joueur : KinematicBody
 {
+    [Signal]
+    private delegate void updatePosJoueur(Vector3 pos);
     private Vector3 velocity;
+
+    [Export]
+    private NodePath blackboardPath;
+
 
     public override void _Ready()
     {
+        if(blackboardPath != null){
+            GD.Print("puteee");
+            GD.Print(Connect("updatePosJoueur", GetNode(blackboardPath), "setValue"));
+        }
         velocity = Vector3.Zero;
     }
 
@@ -27,5 +38,7 @@ public class Joueur : KinematicBody
         if(IsOnFloor()){
             velocity.y = 0;
         }
+
+        EmitSignal("updatePosJoueur", Translation, "posJoueur");
     }
 }
