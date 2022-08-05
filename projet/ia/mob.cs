@@ -9,7 +9,14 @@ public class mob : KinematicBody
     private MeshInstance representation;
     private float height;
 
+    private bool canMove;
+
     private System.Collections.Generic.Queue<Vector3> path;
+
+    public bool CanMove{
+        set{canMove = value;}
+        get{return canMove;}
+    }
 
     public override void _Ready()
     {
@@ -19,18 +26,21 @@ public class mob : KinematicBody
         speed = 10;
         representation = GetNode<MeshInstance>("../representation");
         height = ((CapsuleShape) GetNode<CollisionShape>("CollisionShape").Shape).Height;
+        CanMove = true;
     }
 
     public override void _PhysicsProcess(float delta)
     {
         if(path.Count > 0){
             Vector3 movement = path.Peek() - Translation;
-            movement.y += height/2;
             GetNode<RayCast>("RayCast").CastTo = movement;
             
             movement = movement.Normalized() * speed;
             
-            MoveAndSlide(movement);
+            if(canMove)
+            {
+                MoveAndSlide(movement);
+            }
 
             if((path.Peek() - Translation).Length() < 1.2){
                 path.Dequeue();

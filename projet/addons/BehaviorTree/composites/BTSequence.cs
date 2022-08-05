@@ -3,17 +3,10 @@ using Godot;
 namespace BehaviorTree.Composite{
     public class BTSequence : BTComposite{
 
-        public BTNode Next(){ // part du principe que l'on a vérifié qu'il y avait un autre child
-            return getChilds()[getChilds().IndexOf(getCurrentChild()) + 1];
-        }
-
-        public bool HasNext(){
-            return getChilds().IndexOf(getCurrentChild()) < getChilds().Count-1;
-        }
         public override void _Ready()
         {
             base._Ready();
-            setCurrentChild(getChilds()[0]);
+            reset();
         }
 
         public override void PreTick(Node agent)
@@ -34,7 +27,7 @@ namespace BehaviorTree.Composite{
             if(etat == BTState.FAILURE || etat == BTState.RUNNING){
                 result = etat;
                 if(etat == BTState.FAILURE){
-                    setCurrentChild(getChilds()[0]);
+                    reset();
                 }
             }
             else{
@@ -43,7 +36,7 @@ namespace BehaviorTree.Composite{
                     result = BTState.RUNNING;
                 } else
                 {
-                    setCurrentChild(getChilds()[0]);
+                    reset();
                     result = BTState.SUCCESS;
                 }
             }

@@ -7,16 +7,9 @@ namespace BehaviorTree.Composite
         public override void _Ready()
         {
             base._Ready();
-            setCurrentChild(getChilds()[0]);
+            reset();
         }
 
-        public bool HasNext(){
-            return getChilds().IndexOf(getCurrentChild()) < getChilds().Count - 1;
-        }
-
-        public BTNode Next(){
-            return getChilds()[getChilds().IndexOf(getCurrentChild()) + 1];
-        }
         public override void PreTick(Node agent)
         {
             getCurrentChild().PreTick(agent);
@@ -26,7 +19,7 @@ namespace BehaviorTree.Composite
         {
             BTState etat = getCurrentChild().Tick(agent, blackboard);
             if(etat == BTState.SUCCESS){
-                setCurrentChild(getChilds()[0]);
+                reset();
                 return BTState.SUCCESS;
             }
             else if(etat == BTState.FAILURE){

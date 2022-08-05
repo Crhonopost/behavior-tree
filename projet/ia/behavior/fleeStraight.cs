@@ -8,7 +8,9 @@ namespace BehaviorTree.Leaf
         public override BTState Tick(Node agent, BTBlackboard blackboard)
         {
             mob ia = (mob)agent;
-            ia.settargetLocation(ia.Translation + (ia.Translation - (Vector3)blackboard.getValue("posJoueur")).Normalized() * 3);
+            Vector3 target = ia.Translation + (ia.Translation - (Vector3)blackboard.getValue("posJoueur")).Normalized() * 3;
+            ia.settargetLocation(target);
+            
             return BTState.SUCCESS;
         }
     }

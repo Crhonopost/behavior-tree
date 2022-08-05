@@ -14,6 +14,17 @@ namespace BehaviorTree.Composite{
         public BTNode getCurrentChild(){
             return currentChild;
         }
+        public virtual void reset(){
+            setCurrentChild(getChilds()[0]);
+        }
+
+        public bool HasNext(){
+            return getChilds().IndexOf(getCurrentChild()) < getChilds().Count - 1;
+        }
+
+        public BTNode Next(){
+            return getChilds()[getChilds().IndexOf(getCurrentChild()) + 1];
+        }
 
         public override void _Ready()
         {
@@ -25,6 +36,10 @@ namespace BehaviorTree.Composite{
 
         public Godot.Collections.Array<BTNode> getChilds(){
             return childs;
+        }
+
+        public void setChilds(Godot.Collections.Array<BTNode> cs){
+            childs = cs;
         }
     }
 }
