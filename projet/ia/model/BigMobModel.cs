@@ -3,71 +3,120 @@ using System;
 
 public class BigMobModel : Spatial
 {
-    public override void _PhysicsProcess(float delta)
-    {
-        Vector3 direction = Vector3.Zero;
-        if(Input.IsActionPressed("ui_up")){
-            direction += Vector3.Forward;
-        }
-        if(Input.IsActionPressed("ui_down")){
-            direction += Vector3.Back;
-        }
-        if(Input.IsActionPressed("ui_left")){
-            direction += Vector3.Left;
-        }
-        if(Input.IsActionPressed("ui_right")){
-            direction += Vector3.Right;
-        }
-        Translate(direction * delta * 5);
-        GetNode<frontRightIK>("Armature/Skeleton/frontRightIK").updateRayDirection(direction);
-    }
+    [Signal]
+    delegate void updateSignal(Vector3 dir);
 
-    /*
-    private Skeleton skel;
-    private SkeletonIK frontRightTip;
-    private RayCast frontRightRay;
-    private Spatial frontRightTarget;
-    public override void _EnterTree()
-    {
-        skel = GetNode<Skeleton>("Armature/Skeleton");
-        frontRightTip = GetNode<SkeletonIK>("Armature/Skeleton/frontRightIK");
-        frontRightTip.Start();
-        frontRightTarget = new Spatial();
-        frontRightRay = GetNode<RayCast>("frontRightRay");
-    }
+    private ProceduralLegV2 frontRight;
+    private ProceduralLegV2 frontLeft;
+    private ProceduralLegV2 backRight;
+    private ProceduralLegV2 backLeft;
 
+    private enum State{
+        IDLE,
+        WALKING
+    }
+    private State currentState;
+    private Vector3 direction;
+
+    private ProceduralLegV2[] frontPart;
+    private ProceduralLegV2[] backPart;
+    
     public override void _Ready()
     {
-        GetParent().CallDeferred("add_child",(frontRightTarget));
-        frontRightTarget.Connect("ready", this, "initTarget");
-    }
+        frontRight = GetNode<ProceduralLegV2>("Armature/Skeleton/frontRightIK");
+        frontLeft = GetNode<ProceduralLegV2>("Armature/Skeleton/frontLeftIK");
+        backRight = GetNode<ProceduralLegV2>("Armature/Skeleton/backRightIK");
+        backLeft = GetNode<ProceduralLegV2>("Armature/Skeleton/backLeftIK");
 
-    public void initTarget(){
-        frontRightTip.TargetNode = frontRightTarget.GetPath();
-    }
+        frontRight.Connect("endCourse", this, "alternateFront");
+        frontLeft.Connect("endCourse", this, "alternateFront");
+        backRight.Connect("endCourse", this, "alternateBack");
+        backLeft.Connect("endCourse", this, "alternateBack");
 
+        frontPart = new ProceduralLegV2[2] {frontRight, frontLeft};
+        backPart = new ProceduralLegV2[2] {backRight, backLeft};
+
+        currentState = State.IDLE;
+        direction = Vector3.Zero;
+    }
     public override void _PhysicsProcess(float delta)
     {
+        direction = checkDirection();
+        updateState();
+        Translate(direction * delta * 5);
+    }
+
+    public void updateState(){
+        if(direction != Vector3.Zero && currentState == State.IDLE){
+            frontLeft.setRest(true);
+            backRight.setRest(true);
+            frontRight.setNextStep();
+            backLeft.setNextStep();
+            currentState = State.WALKING;
+        }
+        else if(direction == Vector3.Zero && currentState != State.IDLE){
+            currentState = State.IDLE;
+            frontLeft.setRest(false);
+            frontRight.setRest(false);
+            backLeft.setRest(false);
+            backRight.setRest(false);
+        }
+    }
+
+    public Vector3 checkDirection(){
+        Vector3 newDirection = Vector3.Zero;
         if(Input.IsActionPressed("ui_up")){
-            Translate(Vector3.Forward * delta);
+            newDirection += Vector3.Forward;
         }
         if(Input.IsActionPressed("ui_down")){
-            Translate(Vector3.Back * delta);
+            newDirection += Vector3.Back;
         }
+        if(Input.IsActionPressed("ui_left")){
+            turn("LEFT");
+            newDirection += Vector3.Left;
+        }
+        if(Input.IsActionPressed("ui_right")){
+            turn("RIGHT");
+            newDirection += Vector3.Right;
+        }
+        return newDirection;
+    }
 
-        float distance = (skel.GlobalTransform.origin + skel.GetBoneGlobalPoseNoOverride(skel.FindBone("ForeArm.R")).origin - frontRightTarget.GlobalTransform.origin).Length();
-        if(distance > 14.75f){
-            if(frontRightRay.IsColliding()){
-                Transform targetPos = frontRightTarget.Transform;
-                targetPos.origin = frontRightRay.GetCollisionPoint();
-                frontRightTarget.GlobalTransform = targetPos;
-            }
+    public void alternate(ProceduralLegV2[] part){ // part represente soit les deux pattes avant ou arrieres
+        if(part[0].isResting()){
+            part[0].setNextStep();
+            part[0].setRest(false);
+            part[1].setRest(true);
         }
-        GetNode<CSGSphere>("../show").GlobalTransform = frontRightTarget.Transform;
+        else{
+            part[1].setNextStep();
+            part[1].setRest(false);
+            part[0].setRest(true);
+        }
     }
-    public override void _ExitTree()
-    {
-        frontRightTip.Stop();
+
+    public void alternateFront(){
+        alternate(frontPart);
     }
-    */
+
+    public void alternateBack(){
+        alternate(backPart);
+    }
+
+    public void turn(String direction){
+        float angle = 0;
+        if(direction == "RIGHT"){
+            Rotate(Vector3.Up, Mathf.Deg2Rad(-1));
+            angle = 90;
+        }
+        else if(direction == "LEFT"){
+            Rotate(Vector3.Up, Mathf.Deg2Rad(1));
+            angle = -90;
+        }
+        frontRight.updateRayDirection(GlobalTransform.basis.z.Rotated(Vector3.Up, angle));
+        frontLeft.updateRayDirection(GlobalTransform.basis.z.Rotated(Vector3.Up, angle));
+
+        backRight.updateRayDirection(GlobalTransform.basis.z.Rotated(Vector3.Up, -angle));
+        backLeft.updateRayDirection(GlobalTransform.basis.z.Rotated(Vector3.Up, -angle));
+    }
 }

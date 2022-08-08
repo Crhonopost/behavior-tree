@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class frontRightIK : SkeletonIK
+public class ProceduralLeg : SkeletonIK
 {
     private int footIndex; // index du bone representant le pied
     private Vector3 rayInitDir; // direction d'origine du raycCast
@@ -10,6 +10,7 @@ public class frontRightIK : SkeletonIK
     private Vector3 footToTarget; // bizarre, si j'essais de rendre cette variable locale a une methode, je peux pas utiliser stepTarget pour ca position
     private RayCast nextStepRay; // raycast qui permet de definir le prochaine emplacement de la patte
     private bool grounded; // dixera la pate au sol des qu'elle l'atteindra pour pas que ca glisse
+    private Skeleton skel;
 
     private SecondOrder.SecondOrderSysVec3 stepBehavior; // definit la maniere selon laquelle la patte ira vers la prochaine target
     [Export]
@@ -44,6 +45,7 @@ public class frontRightIK : SkeletonIK
 
     public override void _Ready()
     {
+        skel = GetParentSkeleton();
         Start();
     }
 
@@ -53,24 +55,31 @@ public class frontRightIK : SkeletonIK
 
     public override void _PhysicsProcess(float delta)
     {
-        stepTarget.Translation = stepBehavior.update(delta, stepTarget.Translation);
-
-        Skeleton skel = GetParentSkeleton();
-
         footToTarget = stepTarget.GlobalTransform.origin - skel.ToGlobal(skel.GetBoneGlobalPose(footIndex).origin);
-        GD.Print(footToTarget.Length());
 
         if(footToTarget.Length() > footToTargetRange){
+            grounded = false;
             if(nextStepRay.IsColliding()){
                 finalStepTarget = nextStepRay.GetCollisionPoint();
-                stepTarget.Translation = nextStepRay.GetCollisionPoint();
+                //stepTarget.Translation = nextStepRay.GetCollisionPoint();
             }
+        }
+        else{
+            grounded = true;
         }
         stepTarget.Translation = stepBehavior.update(delta, finalStepTarget);
     }
 
-    public void updateRayDirection(Vector3 movingDir){
-        Vector3 test2 = rayInitDir.Rotated(Vector3.Up, new Vector2(rayInitDir.x, rayInitDir.z).AngleTo(new Vector2(-movingDir.x, movingDir.z)));
-        nextStepRay.CastTo = test2;
+    public bool isGrounded(){
+        return grounded;
+    }
+    public void updateRayDirection(Vector3 movingDir){ // ca c'st tres moche
+        if(movingDir != Vector3.Zero){
+            Vector3 test2 = rayInitDir.Rotated(Vector3.Up, new Vector2(rayInitDir.x, rayInitDir.z).AngleTo(new Vector2(-movingDir.x, movingDir.z)));
+            nextStepRay.CastTo = test2;
+        }
+        else{
+            nextStepRay.CastTo = Vector3.Down * nextStepRay.CastTo.Length();
+        }
     }
 }
