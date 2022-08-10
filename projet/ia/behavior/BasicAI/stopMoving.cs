@@ -1,14 +1,13 @@
 using Godot;
-using System;
 using BehaviorTree.Leaf;
 
-namespace BehaviorTree.mobTest
+namespace BehaviorTree.Behavior.basicAIBehavior
 {
-    public class setTargetLocation : BTLeaf
+    public class stopMoving : BTLeaf
     {
         public override BTState Tick(Node agent, BTBlackboard blackboard)
         {
-            ((mob)agent).settargetLocation(((mob)agent).Translation);
+            ((BasicAI)agent).CanMove = false;
             return BTState.SUCCESS;
         }
     }

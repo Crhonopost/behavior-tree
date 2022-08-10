@@ -62,7 +62,7 @@ namespace BehaviorTree{
             blackboard = GetNode<BTBlackboard>(blackboardPath);
         }
 
-        public override void _Process(float delta)
+        public override void _PhysicsProcess(float delta)
         {
             if(isActive){
                 root.PreTick(agent);

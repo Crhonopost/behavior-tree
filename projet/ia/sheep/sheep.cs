@@ -1,21 +1,8 @@
 using Godot;
 using System;
 
-public class sheep : KinematicBody
+public class sheep : BehaviorTree.BasicAI // faudra mettre le nodePath du blackboard de la scene dans laquelle il est
 {
-    // Declare member variables here. Examples:
-    // private int a = 2;
-    // private string b = "text";
-
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        
-    }
-
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
+    // ce que je commence à faire : 
+    // mettre en place la base de l'ia pour le mouton, ne pas oublier de realiser les actions à l'aide de nodes d'actions pour pouvoir réutiliser le plus de code possible
 }

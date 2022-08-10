@@ -1,14 +1,20 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://ia/model/BigMobModel.glb" type="PackedScene" id=1]
 [ext_resource path="res://addons/BehaviorTree/BasicNode/BT.cs" type="Script" id=2]
 [ext_resource path="res://addons/BehaviorTree/Decorators/BTRepeater.cs" type="Script" id=3]
 [ext_resource path="res://addons/BehaviorTree/BTBlackboard.cs" type="Script" id=4]
+[ext_resource path="res://ia/sheep/sheep.cs" type="Script" id=5]
+[ext_resource path="res://addons/BehaviorTree/composites/BTSequence.cs" type="Script" id=6]
+[ext_resource path="res://ia/behavior/BasicAI/setRandomLocation.cs" type="Script" id=7]
+[ext_resource path="res://ia/behavior/BasicAI/locationReached.cs" type="Script" id=8]
+[ext_resource path="res://ia/behavior/BasicAI/rotateToNextStep.cs" type="Script" id=9]
 
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 2.69002, 0.450162, 4.65077 )
 
-[node name="KinematicBody" type="KinematicBody"]
+[node name="SheepKinematic" type="KinematicBody"]
+script = ExtResource( 5 )
 
 [node name="BigMobModel" parent="." instance=ExtResource( 1 )]
 
@@ -20,9 +26,23 @@ shape = SubResource( 1 )
 
 [node name="BTBlackboard" type="Node" parent="behavior"]
 script = ExtResource( 4 )
+data = {
+}
 
 [node name="RootRepeater" type="Node" parent="behavior"]
 script = ExtResource( 3 )
+
+[node name="BTSequence" type="Node" parent="behavior/RootRepeater"]
+script = ExtResource( 6 )
+
+[node name="LocationReached" type="Node" parent="behavior/RootRepeater/BTSequence"]
+script = ExtResource( 8 )
+
+[node name="NewRandomLocation" type="Node" parent="behavior/RootRepeater/BTSequence"]
+script = ExtResource( 7 )
+
+[node name="RotateToNextStep" type="Node" parent="behavior/RootRepeater/BTSequence"]
+script = ExtResource( 9 )
 
 [node name="BehaviorTree" type="Node" parent="behavior"]
 script = ExtResource( 2 )

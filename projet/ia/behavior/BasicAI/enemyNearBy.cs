@@ -1,7 +1,7 @@
 using Godot;
 using BehaviorTree.Leaf;
 
-namespace BehaviorTree.mobTest
+namespace BehaviorTree.Behavior.basicAIBehavior
 {
     public class enemyNearBy:BTLeaf
     {
@@ -10,7 +10,7 @@ namespace BehaviorTree.mobTest
 
         public override BTState Tick(Node agent, BTBlackboard blackboard)
         {
-            if((((mob)agent).Translation - (Vector3)blackboard.getValue("posJoueur")).Length() < radius){
+            if((((BasicAI)agent).Translation - (Vector3)blackboard.getValue("posJoueur")).Length() < radius){
                 return BTState.SUCCESS;
             }
             else{

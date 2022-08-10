@@ -1,14 +1,12 @@
 using Godot;
-using System;
 using BehaviorTree.Leaf;
 
-namespace BehaviorTree.mobTest{
+namespace BehaviorTree.Behavior.basicAIBehavior{
     public class locationReached : BTLeaf
     {
-
         public override BTState Tick(Node agent, BTBlackboard blackboard)
         {
-            if(((mob)agent).reachedLocation()){
+            if(((BasicAI)agent).reachedLocation()){
                 GD.Print("location reached");
                 return BTState.SUCCESS;
             }
